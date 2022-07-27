@@ -7,7 +7,7 @@ Spring Boot 와 JPA 를 활용한 마켓 어플리케이션
     - 프로젝트 생성
     - H2 데이터베이스 설치
     - JPA, DB 설정
-- [ ]  도메인 분석 설계
+- [x]  도메인 분석 설계
     - 요구사항 분석
     - Domain Model과 Table 설계
     - Entity 클래스 설계
