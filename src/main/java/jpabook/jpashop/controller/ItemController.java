@@ -1,4 +1,4 @@
-경package jpabook.jpashop.controller;
+package jpabook.jpashop.controller;
 
 import jpabook.jpashop.domain.Item.Book;
 import jpabook.jpashop.service.ItemService;
