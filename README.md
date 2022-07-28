@@ -22,12 +22,12 @@ Spring Boot 와 JPA 를 활용한 마켓 어플리케이션
     - 상품 Entity 개발
     - 상품 Repository 개발
     - 상품 Service 개발
-- [ ]  주문 Domain 개발
+- [x]  주문 Domain 개발
     - 주문, 주문상품 Entity 개발
     - 주문 Repository 개발
     - 주문 Service 개발
     - 주문 기능 테스트
-    - 주문 검색 기능 개발
+    - 주문 검색 기능 개발 (추후 예정)
 - [ ]  웹 계층 개발
     - 홈 화면과 레이아웃
     - 회원 등록
