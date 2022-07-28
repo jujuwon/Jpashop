@@ -11,14 +11,14 @@ Spring Boot 와 JPA 를 활용한 마켓 어플리케이션
     - 요구사항 분석
     - Domain Model과 Table 설계
     - Entity 클래스 설계
-- [ ]  애플리케이션 구현 준비
+- [x]  애플리케이션 구현 준비
     - 구현 요구사항
     - 애플리케이션 아키텍처
-- [ ]  회원 Domain 개발
+- [x]  회원 Domain 개발
     - 회원 Repository 개발
     - 회원 Service 개발
     - 회원 기능 테스트
-- [ ]  상품 Domain 개발
+- [x]  상품 Domain 개발
     - 상품 Entity 개발
     - 상품 Repository 개발
     - 상품 Service 개발
