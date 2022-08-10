@@ -5,3 +5,5 @@ application.yml
 
 build
 out
+
+.DS_Store
