@@ -91,4 +91,32 @@ public class OrderRepository {
                 + " join fetch o.delivery d", Order.class
         ).getResultList();
     }
+
+    public List<Order> findAllWithItem() {
+        return em.createQuery(
+            "select distinct o from Order o"
+                + " join fetch o.member m"
+                + " join fetch o.delivery d"
+                + " join fetch o.orderItems oi"
+                + " join fetch oi.item i", Order.class
+        )
+            // .setFirstResult(1)
+            // .setMaxResults(100)
+            .getResultList();
+        /**
+         * 단점 - 페이징 불가능
+         * 컬렉션 fetch join 을 사용하면 페이징이 불가능.
+         * hibernate 는 경고 로그를 남기면서 모든 데이터를 DB 에서 읽어오고, 메모리에서 페이징 해버린다 (매우 위험 !)
+         */
+    }
+
+    public List<Order> findAllWithMemberDelivery(int offset, int limit) {
+        return em.createQuery(
+                "select o from Order o"
+                    + " join fetch o.member m"
+                    + " join fetch o.delivery d", Order.class)
+            .setFirstResult(offset)
+            .setMaxResults(limit)
+            .getResultList();
+    }
 }
