@@ -15,6 +15,8 @@ import jpabook.jpashop.domain.OrderItem;
 import jpabook.jpashop.domain.OrderStatus;
 import jpabook.jpashop.repository.OrderRepository;
 import jpabook.jpashop.repository.OrderSearch;
+import jpabook.jpashop.repository.order.query.OrderQueryDto;
+import jpabook.jpashop.repository.order.query.OrderQueryRepository;
 import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -29,8 +31,7 @@ import lombok.RequiredArgsConstructor;
  * - 트랜잭션 안에서 지연 로딩 필요
  *
  * V3. 엔티티를 조회해서 DTO로 변환(fetch join 사용O)
- * - 페이징 시에는 N 부분을 포기해야함(대신에 batch fetch size? 옵션 주면 N -> 1 쿼리로 변경
- 가능)
+ * - 페이징 시에는 N 부분을 포기해야함(대신에 batch fetch size? 옵션 주면 N -> 1 쿼리로 변경 가능)
  *
  *V4.JPA에서 DTO로 바로 조회, 컬렉션 N 조회 (1+NQuery)
  * - 페이징 가능
@@ -47,6 +48,7 @@ import lombok.RequiredArgsConstructor;
 public class OrderApiController {
 
 	private final OrderRepository orderRepository;
+	private final OrderQueryRepository orderQueryRepository;
 
 	/**
 	 * V1. 엔티티 직접 노출
@@ -106,6 +108,12 @@ public class OrderApiController {
 
 		return result;
 	}
+
+	@GetMapping("/api/v4/orders")
+	public List<OrderQueryDto> ordersV4() {
+		return orderQueryRepository.findOrderQueryDtos();
+	}
+
 
 	@Data
 	static class OrderDto {
