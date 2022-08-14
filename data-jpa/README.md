@@ -1,5 +1,7 @@
 # Data-JPA
-JPA 를 Spring-Data-JPA 로 리팩토링하기 💡
+
+
+### 💡 Spring-Data-JPA 첫 걸음
 
 
 ## 참고 자료
