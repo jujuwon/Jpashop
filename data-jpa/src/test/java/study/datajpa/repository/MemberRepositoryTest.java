@@ -2,6 +2,7 @@ package study.datajpa.repository;
 
 import static org.assertj.core.api.Assertions.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -10,15 +11,17 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
+import study.datajpa.dto.MemberDto;
 import study.datajpa.entity.Member;
+import study.datajpa.entity.Team;
 
 @SpringBootTest
 @Transactional
 @Rollback(value = false)
 class MemberRepositoryTest {
 
-	@Autowired
-	MemberRepository memberRepository;
+	@Autowired MemberRepository memberRepository;
+	@Autowired TeamRepository teamRepository;
 
 	@Test
 	public void testMember() {
@@ -115,6 +118,35 @@ class MemberRepositoryTest {
 		List<String> usernames = memberRepository.findUsernameList();
 		for (String username : usernames) {
 			System.out.println("username = " + username);
+		}
+	}
+
+	@Test
+	public void findMemberDto() {
+		Team team = new Team("teamA");
+		teamRepository.save(team);
+
+		Member member1 = new Member("AAA", 10);
+		member1.setTeam(team);
+		memberRepository.save(member1);
+
+		List<MemberDto> memberDto = memberRepository.findMemberDto();
+		for (MemberDto dto : memberDto) {
+			System.out.println("dto = " + dto);
+		}
+	}
+
+	@Test
+	public void findByNames() {
+		Member member1 = new Member("AAA", 10);
+		Member member2 = new Member("BBB", 20);
+
+		memberRepository.save(member1);
+		memberRepository.save(member2);
+
+		List<Member> byNames = memberRepository.findByNames(Arrays.asList("AAA", "BBB"));
+		for (Member byName : byNames) {
+			System.out.println("byName = " + byName);
 		}
 	}
 }
