@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -148,5 +149,26 @@ class MemberRepositoryTest {
 		for (Member byName : byNames) {
 			System.out.println("byName = " + byName);
 		}
+	}
+
+	@Test
+	public void returnType() {
+		Member member1 = new Member("AAA", 10);
+		Member member2 = new Member("AAA", 20);
+
+		memberRepository.save(member1);
+		memberRepository.save(member2);
+
+		// Member member = memberRepository.findMemberByUsername("AAA");
+		// System.out.println("member = " + member);
+		// Optional<Member> member = memberRepository.findOptionalByUsername("AAA");
+		// System.out.println("member = " + member.get());
+		List<Member> result = memberRepository.findListByUsername("asdfasdf");
+		System.out.println("result = " + result.size());
+		Member member = memberRepository.findMemberByUsername("asdfasdf");
+		System.out.println("member = " + member); // null
+
+		// Optional<Member> findMember = memberRepository.findOptionalByUsername("AAA");
+		// System.out.println("findMember = " + findMember);
 	}
 }
