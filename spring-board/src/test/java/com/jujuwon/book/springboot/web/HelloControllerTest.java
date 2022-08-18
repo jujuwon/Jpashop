@@ -24,7 +24,7 @@ public class HelloControllerTest {
     private MockMvc mvc; // Web API 테스트 시 사용, Spring MVC 테스트의 시작점
 
     @Test
-    public void helloTest() throws Exception {
+    public void hello가_리턴된다() throws Exception {
         String hello = "hello";
 
         // MockMvc 를 통해 /hello 주소로 GET 요청
