@@ -4,6 +4,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -13,10 +16,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
+import com.jujuwon.book.springboot.config.auth.SecurityConfig;
+
 @RunWith(SpringRunner.class)
 // 테스트를 진행할 때 JUnit 에 내장된 실행자 외 다른 실행자 실행
 // 여기서는 SpringRunner 라는 스프링 실행자 사용 즉, Spring Boot 테스트와 JUnit 사이 연결자 역할
-@WebMvcTest(controllers = HelloController.class)
+@WebMvcTest(controllers = HelloController.class,
+    excludeFilters = {
+        @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
+            classes = SecurityConfig.class)
+    })
 // 여러 Spring 테스트 Annotation 중, Web(Spring MVC)에 집중할 수 있는 Annotation
 public class HelloControllerTest {
 
@@ -24,26 +33,28 @@ public class HelloControllerTest {
     private MockMvc mvc; // Web API 테스트 시 사용, Spring MVC 테스트의 시작점
 
     @Test
+    @WithMockUser(roles = "USER")
     public void hello가_리턴된다() throws Exception {
         String hello = "hello";
 
         // MockMvc 를 통해 /hello 주소로 GET 요청
         // 체이닝 지원, 아래와 같이 여러 검증 기능 이어서 선언 가능
         mvc.perform(get("/hello"))
-                .andExpect(status().isOk()) // perform 결과 검증, status 가 200인지 검증
-                .andExpect(content().string(hello)); // 응답 본문의 내용 검증. Controller 에서 "hello" 를 리턴하기 때문에 해당 값 검증
+            .andExpect(status().isOk()) // perform 결과 검증, status 가 200인지 검증
+            .andExpect(content().string(hello)); // 응답 본문의 내용 검증. Controller 에서 "hello" 를 리턴하기 때문에 해당 값 검증
     }
 
     @Test
+    @WithMockUser(roles = "USER")
     public void helloDto가_리턴된다() throws Exception {
         String name = "hello";
         int amount = 1000;
 
         mvc.perform(
-            get("/hello/dto")
-                .param("name", name)
-                .param("amount", String.valueOf(amount))
-        )
+                get("/hello/dto")
+                    .param("name", name)
+                    .param("amount", String.valueOf(amount))
+            )
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.name", is(name)))
             .andExpect(jsonPath("$.amount", is(amount)));
