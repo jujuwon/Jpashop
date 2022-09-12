@@ -8,10 +8,13 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import me.jujuwon.jwttutorial.entity.User;
 import me.jujuwon.jwttutorial.repository.UserRepository;
 
+@Component("userDetailsService")
 public class CustomUserDetailsService implements UserDetailsService {
 
 	private final UserRepository userRepository;
@@ -21,6 +24,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 	}
 
 	@Override
+	@Transactional
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		return userRepository.findOneWithAuthoritiesByUsername(username)
 			.map(user -> createUser(username, user))

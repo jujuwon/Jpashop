@@ -6,9 +6,11 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 
 import me.jujuwon.jwttutorial.jwt.JwtAccessDeniedHandler;
 import me.jujuwon.jwttutorial.jwt.JwtAuthenticationEntryPoint;
@@ -17,7 +19,9 @@ import me.jujuwon.jwttutorial.jwt.TokenProvider;
 
 @EnableWebSecurity	//기본적인 Web 보안 활성화
 @EnableGlobalMethodSecurity(prePostEnabled = true)	//@PreAuthorize 어노테이션을 메소드 단위로 추가하기 위해 적용
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig
+	// extends WebSecurityConfigurerAdapter
+{
 
 	private final TokenProvider tokenProvider;
 	private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
@@ -37,18 +41,27 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		return new BCryptPasswordEncoder();
 	}
 
-	@Override
-	public void configure(WebSecurity web) throws Exception {
-		web
-			.ignoring()
-			.antMatchers(
-				"/h2-console/**"
-				, "/favicon.ico"
-			);	// h2-console 하위 모든 요청과 파비콘은 모두 무시
+	// @Override
+	// public void configure(WebSecurity web) throws Exception {
+	// 	web
+	// 		.ignoring()
+	// 		.antMatchers(
+	// 			"/h2-console/**"
+	// 			, "/favicon.ico"
+	// 		);	// h2-console 하위 모든 요청과 파비콘은 모두 무시
+	// }
+
+	@Bean
+	public WebSecurityCustomizer webSecurityCustomizer() {
+		return (web) -> web.ignoring().antMatchers("/h2-console/**"
+			, "/favicon.ico"
+			, "/error");
 	}
 
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
+	// @Override
+	// protected void configure(HttpSecurity http) throws Exception {
+	@Bean
+	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http
 			.csrf().disable()
 
@@ -72,10 +85,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers("/api/hello").permitAll()    // /api/hello에 대한 요청은 인증없이 접근을 허용하겠다
 			.antMatchers("/api/authenticate").permitAll()
 			.antMatchers("/api/signup").permitAll()
+
 			.anyRequest().authenticated()    //나머지 요청들은 전부 인증을 받아야한다.
 
 			.and()
 			.apply(new JwtSecurityConfig(tokenProvider));
 
+		return http.build();
 	}
 }
